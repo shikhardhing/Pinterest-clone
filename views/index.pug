@@ -1,0 +1,58 @@
+doctype html
+html(lang="en")
+  head
+    title Clinterest-Home
+    link(rel='stylesheet' href='css/bootstrap.css')
+    link(rel='stylesheet' href='css/font-awesome.css')
+    link(rel='stylesheet' href='css/style.css')
+    script(src='js/jquery.js')
+    script(src='js/bootstrap.js')
+    script(src='js/imagesloaded.pkgd.min.js')
+    script(src='js/masonry.pkgd.js')
+    script(src='js/script.js').
+  body
+    nav
+      .navbar.navbar-default
+        .navbar-header
+          a.navbar-brand(href='/') Home
+        ul.navbar-right.nav.navbar-nav
+          -if(!user.twitterID)
+            li
+              a(href='login') Sign in with Twitter
+          -else
+            li
+              a(href='/myPics') My Pics
+            li
+              a.open(href='#') Add a link
+            li
+              a(data-toggle='dropdown',href='#') #{user.name}
+                span.caret
+              ul.dropdown-menu
+                li
+                  a.logout(href='logout') Log Out
+    .wrapper
+      div.grid
+        for i in obj
+          .grid-item(id=i._id.toString())
+            a(href=i.link)
+              img.pic(src=i.link,onerror='imgError(this)')
+            p.caption #{i.caption}
+            img.dp(src=i.owner_img,onerror='imgError(this)')
+            if(user.twitterID===i.owner)
+              i.fa.fa-trash.fa-2x.btn.btn-danger(id=i._id.toString())
+    .form-wrapper
+      a.clos(href='#')
+      .box
+        .left-pane
+          .preview
+        .right-pane
+          form(action='/api/img',method='post')
+            h2.text-center Add a new photo
+            .form-group
+              label Link:
+              input.form-control.link(name='link')
+            .form-group
+              label Caption:
+              input.form-control(name='caption')
+            button.btn.btn-default(type='submit') submit
+    .img-wrapper
